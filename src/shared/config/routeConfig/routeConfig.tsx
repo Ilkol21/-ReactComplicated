@@ -1,4 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope */
+ 
 import AboutPage from "pages/AboutPage/AboutPage";
 import MainPage from "pages/MainPage/MainPage";
 import {RouteProps} from "react-router-dom";
