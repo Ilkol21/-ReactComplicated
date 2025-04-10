@@ -14,10 +14,55 @@ jobs:
         node-version: [ "22.x" ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2  # Клонируем репозиторий
       - name: Starting Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: install modules
-        run: npm install
+          node-version: ${{ matrix.node-version }}  # Устанавливаем Node.js
+      - name: Install modules
+        run: npm install  # Устанавливаем зависимости
+
+      # Линтинг TypeScript
+      - name: Run TypeScript linting
+        run: npm run lint:ts  # Запуск линтинга для TypeScript файлов
+
+      - name: Fix TypeScript linting
+        run: npm run lint:ts:fix  # Автоматическая фиксация ошибок линтинга в TypeScript
+
+      # Линтинг SCSS
+      - name: Run SCSS linting
+        run: npm run lint:scss  # Запуск линтинга для SCSS файлов
+
+      - name: Fix SCSS linting
+        run: npm run lint:scss:fix  # Автоматическая фиксация ошибок линтинга в SCSS
+
+      # Тесты
+      - name: Run Unit Tests
+        run: npm run test:unit  # Запуск unit тестов
+
+      - name: Run UI Tests
+        run: npm run test:ui  # Запуск UI тестов с Loki
+
+      - name: Approve UI Tests
+        run: npm run test:ui:ok  # Подтверждение UI тестов с Loki
+
+      - name: Run UI CI Test
+        run: npm run test:ui:ci  # CI тестирование UI с Loki
+
+      # Сборка проекта
+      - name: Build for Production
+        run: npm run build:prod  # Сборка проекта для продакшн
+
+      - name: Build for Development
+        run: npm run build:dev  # Сборка проекта для разработки
+
+      # Запуск и сборка Storybook
+      - name: Run Storybook
+        run: npm run storybook  # Запуск Storybook
+
+      - name: Build Storybook
+        run: npm run storybook:build  # Сборка Storybook
+
+      # Запуск Webpack Development Server
+      - name: Start Webpack Dev Server
+        run: npm run start  # Запуск Webpack Dev Server
