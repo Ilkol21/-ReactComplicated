@@ -5,10 +5,9 @@ import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 
 export default defineConfig([
-  // JS/TS базовые правила
+  // JavaScript правила
   {
     files: ["**/*.{js,cjs,mjs,ts,tsx,jsx}"],
-    plugins: { js },
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -16,10 +15,15 @@ export default defineConfig([
         ...globals.browser,
       },
     },
-    extends: ["plugin:@eslint/js/recommended"],
+    plugins: {
+      js,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+    },
   },
 
-  // TypeScript рекомендуемые правила
+  // TypeScript
   {
     files: ["**/*.{ts,tsx}"],
     ...tseslint.configs.recommended,
@@ -28,7 +32,7 @@ export default defineConfig([
     },
   },
 
-  // React с поддержкой JSX без импорта React
+  // React
   {
     files: ["**/*.{jsx,tsx}"],
     ...pluginReact.configs.flat.recommended,
@@ -38,16 +42,18 @@ export default defineConfig([
       },
     },
     rules: {
-      "react/react-in-jsx-scope": "off", // Не нужен импорт React с React 17+
-      "react/display-name": "off",        // Часто мешает при экспортируемых стрелках
+      "react/react-in-jsx-scope": "off",
+      "react/display-name": "off",
     },
   },
 
-  // Jest глобалы в тестах
+  // Jest (для тестов)
   {
     files: ["**/*.test.{ts,tsx,js}"],
     languageOptions: {
-      globals: globals.jest,
+      globals: {
+        ...globals.jest,
+      },
     },
   },
 ]);
