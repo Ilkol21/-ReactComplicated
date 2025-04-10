@@ -5,35 +5,49 @@ import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 
 export default defineConfig([
-  // JS + TS базовые правила
+  // JS/TS базовые правила
   {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    files: ["**/*.{js,cjs,mjs,ts,tsx,jsx}"],
     plugins: { js },
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
         ...globals.browser,
-        ...globals.node,
       },
     },
-    extends: ["js/recommended"],
+    extends: ["plugin:@eslint/js/recommended"],
   },
 
-  // TypeScript-специфические правила
+  // TypeScript рекомендуемые правила
   {
-    ...tseslint.configs.recommended[0], // так подключаются правила typescript-eslint
     files: ["**/*.{ts,tsx}"],
+    ...tseslint.configs.recommended,
+    rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
   },
 
-  // React-правила
+  // React с поддержкой JSX без импорта React
   {
-    ...pluginReact.configs.flat.recommended,
     files: ["**/*.{jsx,tsx}"],
+    ...pluginReact.configs.flat.recommended,
     settings: {
       react: {
-        version: "detect", // Автоматически определяет версию React
+        version: "detect",
       },
+    },
+    rules: {
+      "react/react-in-jsx-scope": "off", // Не нужен импорт React с React 17+
+      "react/display-name": "off",        // Часто мешает при экспортируемых стрелках
+    },
+  },
+
+  // Jest глобалы в тестах
+  {
+    files: ["**/*.test.{ts,tsx,js}"],
+    languageOptions: {
+      globals: globals.jest,
     },
   },
 ]);
-
-
